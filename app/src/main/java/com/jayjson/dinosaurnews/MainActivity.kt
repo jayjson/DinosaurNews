@@ -83,17 +83,14 @@ class MainActivity : AppCompatActivity() {
         var index = 0;
         for (childView in mainGroup.children) {
             if (childView is TextView) {
-                childView.text = prepareDisplayText(articles[index])
+                val article = articles[index]
+                childView.text = prepareDisplayText(article.title, article.author, article.source.name)
                 index++
             }
         }
     }
 
-    private fun prepareDisplayText(article: Article): String {
-        val title = article.title
-        val author = article.author
-        val sourceName = article.source.name
-
+    private fun prepareDisplayText(title: String, author: String? = null, sourceName: String): String {
         var textToDisplay = "$title"
         if (author != null) {
             textToDisplay += " by $author"
