@@ -9,13 +9,17 @@ import com.jayjson.dinosaurnews.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
-    private val reuters = Source("reuters", "Reuters")
-    private val theGuardian = Source(null, "The Guardian")
-    private val businessInsider = Source("business-insider", "Business Insider")
+    private val sources = mapOf(
+        "Reuters" to Source("reuters", "Reuters"),
+        "The Guardian" to Source(null, "The Guardian"),
+        "Business Insider" to Source("business-insider", "Business Insider")
+    )
+
+    private val defaultSource = Source(null, "")
 
     private val articles = arrayListOf(
         Article(
-            reuters,
+            sources["Reuters"] ?: defaultSource,
             null,
             "BlackRock launches spot bitcoin private trust for U.S. clients - Reuters",
             "BlackRock Inc <a href=\"https://www.reuters.com/companies/BLK.N\" target=\"_blank\">(BLK.N)</a>, the world's biggest asset manager, has launched a spot bitcoin private trust for institutional clients in the United States, according to a blog post on its website.",
@@ -25,7 +29,7 @@ class MainActivity : AppCompatActivity() {
             "Aug 11 (Reuters) - BlackRock Inc (BLK.N), the world's biggest asset manager, has launched a spot bitcoin private trust for institutional clients in the United States, according to a blog post on its … [+1171 chars]"
         ),
         Article(
-            reuters,
+            sources["Reuters"] ?: defaultSource,
             null,
             "Honduras launches 'Bitcoin Valley' in the tourist town of Santa Lucia - Reuters.com",
             "People can pay for a slushie with crypto in the streets of \"Bitcoin Valley,\" a project in the Honduran tourist enclave of Santa Lucia through which the country has entered the digital currency trend.",
@@ -35,7 +39,7 @@ class MainActivity : AppCompatActivity() {
             "July 29 (Reuters) - People can pay for a slushie with crypto in the streets of \"Bitcoin Valley,\" a project in the Honduran tourist enclave of Santa Lucia through which the country has entered the dig… [+2277 chars]"
         ),
         Article(
-            theGuardian,
+            sources["The Guardian"] ?: defaultSource,
             "Alex Hern",
             "I’m no longer making predictions about cryptocurrency. Here’s why",
             "If you’d bought or sold bitcoin every time I wrote about it over the last decade, how much would you have made? Let’s do the maths<ul><li>Don’t get TechScape delivered to your inbox? Sign up here</li></ul>I’ve been writing about cryptocurrency for my entire c…",
@@ -45,7 +49,7 @@ class MainActivity : AppCompatActivity() {
             "Ive been writing about cryptocurrency for my entire career. In that time, one point Ive always stuck to is simple: dont listen to me for investment advice. Today, I want to quantify why.\r\nBitcoin was… [+7658 chars]"
         ),
         Article(
-            businessInsider,
+            sources["Business Insider"] ?: defaultSource,
             "insider@insider.com (Carla Mozée)",
             "Michael Saylor to step down as MicroStrategy CEO as the software maker records $917 million charge on bitcoin investment",
             "Saylor will become executive chairman at MicroStrategy and will focus more on the company's bitcoin acquisition strategy.",
@@ -55,7 +59,7 @@ class MainActivity : AppCompatActivity() {
             "MicroStrategy's founder Michael Saylor will step down as CEO, with the move coming after the enterprise software maker took a quarterly impairment charge of more than $900 million related to the drop… [+1552 chars]"
         ),
         Article(
-            businessInsider,
+            sources["Business Insider"] ?: defaultSource,
             "insider@insider.com (Davíd Lavie)",
             "Bitcoin halving is how the supply of the world's largest cryptocurrency is controlled",
             "Bitcoin halving is when the rate of new bitcoins entering circulation is cut in half, which occurs approximately every four years.",
