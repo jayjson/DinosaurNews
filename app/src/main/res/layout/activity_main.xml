@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
     <LinearLayout
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/mainGroup"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -17,31 +15,31 @@
             android:id="@+id/textView0"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Article 0 info" />
+            android:text="@string/article_0_info" />
 
         <TextView
             android:id="@+id/textView1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Article 1 info" />
+            android:text="@string/article_1_info" />
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Article 2 info" />
+            android:text="@string/article_2_info" />
 
         <TextView
             android:id="@+id/textView3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Article 3 info" />
+            android:text="@string/article_3_info" />
 
         <TextView
             android:id="@+id/textView4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Article 4 info" />
+            android:text="@string/article_4_info" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
