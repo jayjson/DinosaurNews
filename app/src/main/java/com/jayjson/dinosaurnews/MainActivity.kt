@@ -2,6 +2,8 @@ package com.jayjson.dinosaurnews
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.TextView
+import androidx.core.view.children
 import com.jayjson.dinosaurnews.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -66,12 +68,37 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setupBinding()
+        populateArticles()
+    }
+
+    private fun setupBinding() {
         binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+    }
 
-        // set content view after binding
-        val view = binding.root
-        setContentView(binding.mainGroup)
+    private fun populateArticles() {
+        val mainGroup = binding.mainGroup
 
+        var index = 0;
+        for (childView in mainGroup.children) {
+            if (childView is TextView) {
+                childView.text = prepareDisplayText(articles[index])
+                index++
+            }
+        }
+    }
 
+    private fun prepareDisplayText(article: Article): String {
+        val title = article.title
+        val author = article.author
+        val sourceName = article.source.name
+
+        var textToDisplay = "$title"
+        if (author != null) {
+            textToDisplay += " by $author"
+        }
+        textToDisplay += " ($sourceName)"
+        return textToDisplay
     }
 }
