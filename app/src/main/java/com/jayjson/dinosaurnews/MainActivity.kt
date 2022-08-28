@@ -2,8 +2,11 @@ package com.jayjson.dinosaurnews
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.jayjson.dinosaurnews.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
+
     private val reuters = Source("reuters", "Reuters")
     private val theGuardian = Source(null, "The Guardian")
     private val businessInsider = Source("business-insider", "Business Insider")
@@ -63,6 +66,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+
+        // set content view after binding
+        val view = binding.root
+        setContentView(binding.mainGroup)
+
+
     }
 }
