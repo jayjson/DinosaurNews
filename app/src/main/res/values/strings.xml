@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Dinosaur News</string>
+    <string name="article_0_info">Article 0 info</string>
+    <string name="article_1_info">Article 1 info</string>
+    <string name="article_2_info">Article 2 info</string>
+    <string name="article_3_info">Article 3 info</string>
+    <string name="article_4_info">Article 4 info</string>
 </resources>
