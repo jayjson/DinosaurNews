@@ -1,7 +1,11 @@
 package com.jayjson.dinosaurnews
 
-class NewService() {
-    fun getArticles(): List<Article> {
+interface NewService {
+    fun getArticles(): List<Article>
+}
+
+class InMemoryNewsServiceImpl: NewService {
+    override fun getArticles(): List<Article> {
         val sources = mapOf(
             "Reuters" to Source("reuters", "Reuters"),
             "The Guardian" to Source(null, "The Guardian"),
