@@ -5,7 +5,7 @@ interface NewService {
 }
 
 class InMemoryNewsServiceImpl: NewService {
-    override fun getArticles(): List<Article> {
+    override fun getArticles(): ArrayList<Article> {
         val sources = mapOf(
             "Reuters" to Source("reuters", "Reuters"),
             "The Guardian" to Source(null, "The Guardian"),
