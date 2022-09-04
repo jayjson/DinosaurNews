@@ -1,5 +1,7 @@
 package com.jayjson.dinosaurnews
 
+import com.jayjson.dinosaurnews.models.Article
+
 interface NewService {
     fun getArticles(): List<Article>
 }
