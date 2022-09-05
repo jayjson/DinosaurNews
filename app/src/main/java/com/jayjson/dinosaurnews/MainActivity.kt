@@ -8,7 +8,7 @@ import com.jayjson.dinosaurnews.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private val service = InMemoryNewsServiceImpl()
+    private val service: NewsService = InMemoryNewsServiceImpl()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

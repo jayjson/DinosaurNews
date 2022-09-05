@@ -2,19 +2,19 @@ package com.jayjson.dinosaurnews
 
 import com.jayjson.dinosaurnews.models.Article
 
-interface NewService {
+interface NewsService {
     fun getArticles(): List<Article>
 }
 
-class InMemoryNewsServiceImpl: NewService {
-    override fun getArticles(): ArrayList<Article> {
+class InMemoryNewsServiceImpl: NewsService {
+    override fun getArticles(): List<Article> {
         val sources = mapOf(
             "Reuters" to Source("reuters", "Reuters"),
             "The Guardian" to Source(null, "The Guardian"),
             "Business Insider" to Source("business-insider", "Business Insider")
         )
         val defaultSource = Source(null, "")
-        return arrayListOf(
+        val fullList = arrayListOf(
             Article(
                 sources["Reuters"] ?: defaultSource,
                 null,
@@ -25,6 +25,7 @@ class InMemoryNewsServiceImpl: NewService {
                 "2022-08-11T13:49:00Z",
                 "Aug 11 (Reuters) - BlackRock Inc (BLK.N), the world's biggest asset manager, has launched a spot bitcoin private trust for institutional clients in the United States, according to a blog post on its … [+1171 chars]"
             ),
+            null,
             Article(
                 sources["Reuters"] ?: defaultSource,
                 null,
@@ -55,6 +56,7 @@ class InMemoryNewsServiceImpl: NewService {
                 "2022-08-03T13:37:24Z",
                 "MicroStrategy's founder Michael Saylor will step down as CEO, with the move coming after the enterprise software maker took a quarterly impairment charge of more than $900 million related to the drop… [+1552 chars]"
             ),
+            null,
             Article(
                 sources["Business Insider"] ?: defaultSource,
                 "insider@insider.com (Davíd Lavie)",
@@ -66,5 +68,6 @@ class InMemoryNewsServiceImpl: NewService {
                 "Despite its somewhat nebulous-seeming nature, Bitcoin is a finite resource. There will only ever be 21 million Bitcoin. So far, 19 million have already been mined, meaning there's just two million Bi… [+6317 chars]"
             )
         )
+        return fullList.filterNotNull()
     }
 }
