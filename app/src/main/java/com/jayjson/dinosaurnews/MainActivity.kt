@@ -22,25 +22,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun populateArticles() {
-        val mainGroup = binding.mainGroup
         val articles = service.getArticles()
 
-        var index = 0;
-        for (childView in mainGroup.children) {
-            if (childView is TextView) {
-                val article = articles[index]
-                childView.text = prepareDisplayText(article.title, article.author, article.source.name)
-                index++
-            }
+        articles.forEach { article ->
+            val articleView = ArticleView(this)
+            articleView.setData(article)
+            binding.articlesContainer.addView(articleView)
         }
-    }
-
-    private fun prepareDisplayText(title: String, author: String? = null, sourceName: String): String {
-        var textToDisplay = "$title"
-        if (author != null) {
-            textToDisplay += " by $author"
-        }
-        textToDisplay += " ($sourceName)"
-        return textToDisplay
     }
 }
