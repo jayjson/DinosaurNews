@@ -1,4 +1,6 @@
-package com.jayjson.dinosaurnews
+package com.jayjson.dinosaurnews.models
+
+import com.jayjson.dinosaurnews.Source
 
 data class Article(val source: Source,
                    val author: String? = null,
