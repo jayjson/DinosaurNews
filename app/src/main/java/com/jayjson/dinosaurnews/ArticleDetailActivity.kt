@@ -17,11 +17,12 @@ class ArticleDetailActivity : AppCompatActivity() {
 
     lateinit var article: Article
 
+    private val bookmarkManager: BookmarkManager = BookmarkManager(this)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupBindingAndViews()
         populateArticleDetails()
-
     }
 
     private fun setupBindingAndViews() {
