@@ -1,6 +1,7 @@
 package com.jayjson.dinosaurnews.models
 
 import com.jayjson.dinosaurnews.Source
+import java.io.Serializable
 
 data class Article(val source: Source,
                    val author: String? = null,
@@ -9,4 +10,4 @@ data class Article(val source: Source,
                    val url: String,
                    val urlToImage: String? = null,
                    val publishedAt: String,
-                   val content: String)
+                   val content: String) : Serializable
