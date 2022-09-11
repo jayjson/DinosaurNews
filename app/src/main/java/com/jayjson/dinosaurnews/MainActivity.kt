@@ -43,8 +43,8 @@ class MainActivity : AppCompatActivity(), ArticleListAdapter.ArticleClickListene
     private fun showArticleDetails(article: Article) {
         println("showArticleDetails")
 
-//        val article = Intent(this, ArticleDetailActivity::class.java)
+        val articleDetail = Intent(this, ArticleDetailActivity::class.java)
 //        article.putExtra(INTENT_ARTICLE_KEY, article)
-//        startActivity(article)
+        startActivity(articleDetail)
     }
 }
