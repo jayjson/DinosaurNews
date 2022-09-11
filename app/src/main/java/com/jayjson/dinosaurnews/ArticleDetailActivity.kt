@@ -2,9 +2,11 @@ package com.jayjson.dinosaurnews
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.jayjson.dinosaurnews.databinding.ActivityArticleDetailBinding
 import com.jayjson.dinosaurnews.databinding.ActivityMainBinding
 import com.jayjson.dinosaurnews.models.Article
@@ -14,6 +16,7 @@ class ArticleDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityArticleDetailBinding
     private lateinit var titleTextView: TextView
     private lateinit var descriptionTextView: TextView
+    private lateinit var bookmarkButton: Button
 
     lateinit var article: Article
 
@@ -30,6 +33,12 @@ class ArticleDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
         titleTextView = binding.titleTextView
         descriptionTextView = binding.descriptionTextView
+
+        bookmarkButton = binding.bookmarkButton
+        bookmarkButton.setOnClickListener { view ->
+            bookmarkManager.save(article)
+            Snackbar.make(view, "Article Bookmarked!", Snackbar.LENGTH_LONG).show()
+        }
     }
 
     private fun populateArticleDetails() {
