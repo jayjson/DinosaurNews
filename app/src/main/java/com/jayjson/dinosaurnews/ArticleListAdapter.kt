@@ -5,7 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.jayjson.dinosaurnews.models.Article
 
-class ArticleListAdapter(var articles: List<Article>) : RecyclerView.Adapter<ArticleListViewHolder>() {
+class ArticleListAdapter(var articles: List<Article>, val clickListener: ArticleClickListener) : RecyclerView.Adapter<ArticleListViewHolder>() {
+
+    interface ArticleClickListener {
+        fun articleClicked(article: Article)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleListViewHolder {
         val view = LayoutInflater.from(parent?.context)
             .inflate(R.layout.article_view_holder, parent, false)
@@ -13,7 +18,11 @@ class ArticleListAdapter(var articles: List<Article>) : RecyclerView.Adapter<Art
     }
 
     override fun onBindViewHolder(holder: ArticleListViewHolder, position: Int) {
-        holder.titleTextView.text = articles[position].title
+        val article = articles[position]
+        holder.titleTextView.text = article.title
+        holder.itemView.setOnClickListener {
+            clickListener.articleClicked(article)
+        }
     }
 
     override fun getItemCount(): Int {

@@ -1,18 +1,22 @@
 package com.jayjson.dinosaurnews
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TextView
-import androidx.core.view.children
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jayjson.dinosaurnews.databinding.ActivityMainBinding
+import com.jayjson.dinosaurnews.models.Article
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ArticleListAdapter.ArticleClickListener {
     private lateinit var binding: ActivityMainBinding
     private val service: NewsService = InMemoryNewsServiceImpl()
 
     private lateinit var articleListRecyclerView: RecyclerView
+
+    companion object {
+        const val INTENT_ARTICLE_KEY = "article"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,15 +31,20 @@ class MainActivity : AppCompatActivity() {
 
     private fun populateArticles() {
         val articles = service.getArticles()
-
-        articleListRecyclerView = findViewById(R.id.article_list_recyclerview)
+        articleListRecyclerView = binding.articleListRecyclerview
         articleListRecyclerView.layoutManager = LinearLayoutManager(this)
-        articleListRecyclerView.adapter = ArticleListAdapter(articles)
+        articleListRecyclerView.adapter = ArticleListAdapter(articles, this)
+    }
 
-//        articles.forEach { article ->
-//            val articleView = ArticleView(this)
-//            articleView.setData(article)
-//            binding.articlesContainer.addView(articleView)
-//        }
+    override fun articleClicked(article: Article) {
+        showArticleDetails(article)
+    }
+
+    private fun showArticleDetails(article: Article) {
+        println("showArticleDetails")
+
+//        val article = Intent(this, ArticleDetailActivity::class.java)
+//        article.putExtra(INTENT_ARTICLE_KEY, article)
+//        startActivity(article)
     }
 }
