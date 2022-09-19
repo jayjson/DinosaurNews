@@ -8,9 +8,21 @@ import androidx.recyclerview.widget.RecyclerView
 import com.jayjson.dinosaurnews.databinding.ActivityMainBinding
 import com.jayjson.dinosaurnews.models.Article
 
+import android.net.ConnectivityManager
+import android.os.Build
+import androidx.annotation.RequiresApi
+import com.jayjson.dinosaurnews.models.Country
+import com.jayjson.dinosaurnews.networking.NetworkStatusChecker
+
+@RequiresApi(Build.VERSION_CODES.M)
 class MainActivity : AppCompatActivity(), ArticleListAdapter.ArticleClickListener {
     private lateinit var binding: ActivityMainBinding
     private val service: NewsService = InMemoryNewsServiceImpl()
+    private val remoteApi = App.remoteApi
+
+    private val networkStatusChecker by lazy {
+        NetworkStatusChecker(getSystemService(ConnectivityManager::class.java))
+    }
 
     private lateinit var articleListRecyclerView: RecyclerView
 
@@ -21,19 +33,12 @@ class MainActivity : AppCompatActivity(), ArticleListAdapter.ArticleClickListene
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupBinding()
-        populateArticles()
+        fetchTopHeadlines()
     }
 
     private fun setupBinding() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-    }
-
-    private fun populateArticles() {
-        val articles = service.getArticles()
-        articleListRecyclerView = binding.articleListRecyclerview
-        articleListRecyclerView.layoutManager = LinearLayoutManager(this)
-        articleListRecyclerView.adapter = ArticleListAdapter(articles, this)
     }
 
     override fun articleClicked(article: Article) {
@@ -44,5 +49,21 @@ class MainActivity : AppCompatActivity(), ArticleListAdapter.ArticleClickListene
         val articleDetail = Intent(this, ArticleDetailActivity::class.java)
         articleDetail.putExtra(INTENT_ARTICLE_KEY, article)
         startActivity(articleDetail)
+    }
+
+    private fun fetchTopHeadlines() {
+        val country = Country.US
+
+        networkStatusChecker.performIfConnectedToInternet {
+            remoteApi.getTopHeadlines(country) { articles: List<Article>, throwable: Throwable? ->
+                populateArticles(articles)
+            }
+        }
+    }
+
+    private fun populateArticles(articles: List<Article>) {
+        articleListRecyclerView = binding.articleListRecyclerview
+        articleListRecyclerView.layoutManager = LinearLayoutManager(this)
+        articleListRecyclerView.adapter = ArticleListAdapter(articles, this)
     }
 }

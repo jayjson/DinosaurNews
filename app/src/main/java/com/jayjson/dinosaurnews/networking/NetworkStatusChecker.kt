@@ -2,10 +2,13 @@ package com.jayjson.dinosaurnews.networking
 
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.os.Build
+import androidx.annotation.RequiresApi
 
 /**
  * Checks the Internet connection and performs an action if it's active.
  */
+@RequiresApi(Build.VERSION_CODES.M)
 class NetworkStatusChecker(private val connectivityManager: ConnectivityManager?) {
 
     inline fun performIfConnectedToInternet(action: () -> Unit) {

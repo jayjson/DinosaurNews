@@ -5,7 +5,7 @@ import android.content.Context
 import com.jayjson.dinosaurnews.networking.RemoteApi
 import com.jayjson.dinosaurnews.networking.buildApiService
 
-private const val KEY_PREFERENCES = "taskie_preferences"
+private const val KEY_PREFERENCES = "dinosaur_news_preferences"
 private const val KEY_TOKEN = "token"
 
 class App : Application() {

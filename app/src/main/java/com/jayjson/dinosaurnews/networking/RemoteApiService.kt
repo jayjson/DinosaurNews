@@ -7,5 +7,6 @@ import retrofit2.http.*
 interface RemoteApiService {
 
     @GET("/v2/top-headlines")
-    fun getTopHeadlines(@Header("Authorization") token: String): Call<GetTopHeadlinesResponse>
+    fun getTopHeadlines(@Query("apiKey") apiKey: String,
+                        @Query("country") country: String): Call<GetTopHeadlinesResponse>
 }
