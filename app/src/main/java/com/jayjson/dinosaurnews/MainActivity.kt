@@ -11,6 +11,7 @@ import com.jayjson.dinosaurnews.models.Article
 import android.net.ConnectivityManager
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.google.android.material.snackbar.Snackbar
 import com.jayjson.dinosaurnews.models.Country
 import com.jayjson.dinosaurnews.networking.NetworkStatusChecker
 
@@ -56,9 +57,17 @@ class MainActivity : AppCompatActivity(), ArticleListAdapter.ArticleClickListene
 
         networkStatusChecker.performIfConnectedToInternet {
             remoteApi.getTopHeadlines(country) { articles: List<Article>, throwable: Throwable? ->
-                populateArticles(articles)
+                if (throwable != null || articles.isEmpty()) {
+                    showLoginError()
+                } else if (throwable != null) {
+                    populateArticles(articles)
+                }
             }
         }
+    }
+
+    private fun showLoginError() {
+        Snackbar.make(binding.root, "Could not fetch articles :(", Snackbar.LENGTH_LONG).show()
     }
 
     private fun populateArticles(articles: List<Article>) {
