@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity(), ArticleListAdapter.ArticleClickListene
             remoteApi.getTopHeadlines(country) { articles: List<Article>, throwable: Throwable? ->
                 if (throwable != null || articles.isEmpty()) {
                     showLoginError()
-                } else if (throwable != null) {
+                } else if (articles.isNotEmpty()) {
                     populateArticles(articles)
                 }
             }
