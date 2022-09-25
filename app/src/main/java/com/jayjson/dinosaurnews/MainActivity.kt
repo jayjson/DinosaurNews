@@ -15,6 +15,7 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.annotation.RequiresApi
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.jayjson.dinosaurnews.models.Country
 import com.jayjson.dinosaurnews.models.OperationState
 import com.jayjson.dinosaurnews.networking.NetworkStatusChecker
@@ -38,6 +39,7 @@ class MainActivity : AppCompatActivity(), ArticleListAdapter.ArticleClickListene
     private lateinit var loadingIndicator: ProgressBar
     private lateinit var errorStateView: LinearLayout
     private lateinit var tryAgainButton: Button
+    private lateinit var swipeContainer: SwipeRefreshLayout
 
     companion object {
         const val INTENT_ARTICLE_KEY = "article"
@@ -61,9 +63,15 @@ class MainActivity : AppCompatActivity(), ArticleListAdapter.ArticleClickListene
         loadingIndicator = binding.progressIndicator
         errorStateView = binding.linearLayoutErrorState
         tryAgainButton = binding.buttonErrorState
+        swipeContainer = binding.swipeContainer
 
         tryAgainButton.setOnClickListener {
             fetchTopHeadlines()
+        }
+
+        swipeContainer.setOnRefreshListener {
+            fetchTopHeadlines()
+            swipeContainer.isRefreshing = false
         }
     }
 
