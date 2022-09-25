@@ -18,7 +18,12 @@ import androidx.annotation.RequiresApi
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.jayjson.dinosaurnews.models.Country
 import com.jayjson.dinosaurnews.models.OperationState
+import com.jayjson.dinosaurnews.models.Success
 import com.jayjson.dinosaurnews.networking.NetworkStatusChecker
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @RequiresApi(Build.VERSION_CODES.M)
 class MainActivity : AppCompatActivity(), ArticleListAdapter.ArticleClickListener {
@@ -90,12 +95,15 @@ class MainActivity : AppCompatActivity(), ArticleListAdapter.ArticleClickListene
         val country = Country.US
 
         networkStatusChecker.performIfConnectedToInternet {
-            remoteApi.getTopHeadlines(country) { articles: List<Article>, throwable: Throwable? ->
-                if (throwable != null || articles.isEmpty()) {
-                    state = OperationState.failed
-                } else if (articles.isNotEmpty()) {
-                    populateArticles(articles)
-                    state = OperationState.succeeded
+            GlobalScope.launch(Dispatchers.IO) {
+                val result = remoteApi.getTopHeadlines(country)
+                withContext(Dispatchers.Main) {
+                    if (result is Success) {
+                        populateArticles(result.data)
+                        state = OperationState.succeeded
+                    } else {
+                        state = OperationState.failed
+                    }
                 }
             }
         }
