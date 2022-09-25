@@ -1,8 +1,8 @@
 package com.jayjson.dinosaurnews
 
-import com.jayjson.dinosaurnews.models.Country
-import com.jayjson.dinosaurnews.models.Language
-import com.jayjson.dinosaurnews.models.SourceCategory
+import com.jayjson.dinosaurnews.model.Country
+import com.jayjson.dinosaurnews.model.Language
+import com.jayjson.dinosaurnews.model.SourceCategory
 import java.io.Serializable
 
 data class Source(val id: String? = null,

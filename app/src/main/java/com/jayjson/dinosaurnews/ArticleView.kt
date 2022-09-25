@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.jayjson.dinosaurnews.databinding.ArticleViewBinding
-import com.jayjson.dinosaurnews.models.Article
+import com.jayjson.dinosaurnews.model.Article
 
 class ArticleView(
     context: Context,

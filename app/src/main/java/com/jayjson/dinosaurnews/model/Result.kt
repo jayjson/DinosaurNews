@@ -1,4 +1,4 @@
-package com.jayjson.dinosaurnews.models
+package com.jayjson.dinosaurnews.model
 
 sealed class Result<out T: Any>
 

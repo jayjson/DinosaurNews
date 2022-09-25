@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jayjson.dinosaurnews.databinding.ActivityMainBinding
-import com.jayjson.dinosaurnews.models.Article
+import com.jayjson.dinosaurnews.model.Article
 
 import android.net.ConnectivityManager
 import android.os.Build
@@ -14,12 +14,16 @@ import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.jayjson.dinosaurnews.models.Country
-import com.jayjson.dinosaurnews.models.OperationState
-import com.jayjson.dinosaurnews.models.Success
+import com.jayjson.dinosaurnews.model.Country
+import com.jayjson.dinosaurnews.model.OperationState
+import com.jayjson.dinosaurnews.model.Result
+import com.jayjson.dinosaurnews.model.Success
+import com.jayjson.dinosaurnews.model.Failure
 import com.jayjson.dinosaurnews.networking.NetworkStatusChecker
+import com.jayjson.dinosaurnews.viewmodel.ArticlesListViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -34,7 +38,10 @@ class MainActivity : AppCompatActivity(), ArticleListAdapter.ArticleClickListene
         }
 
     private lateinit var binding: ActivityMainBinding
-    private val remoteApi = App.remoteApi
+
+    private val viewModel: ArticlesListViewModel by viewModels {
+        ArticlesListViewModel.Factory(remoteApi = App.remoteApi, networkChecker = networkStatusChecker)
+    }
 
     private val networkStatusChecker by lazy {
         NetworkStatusChecker(getSystemService(ConnectivityManager::class.java))
@@ -91,19 +98,14 @@ class MainActivity : AppCompatActivity(), ArticleListAdapter.ArticleClickListene
     }
 
     private fun fetchTopHeadlines() {
-        state = OperationState.loading
-        val country = Country.US
-
-        networkStatusChecker.performIfConnectedToInternet {
-            GlobalScope.launch(Dispatchers.IO) {
-                val result = remoteApi.getTopHeadlines(country)
-                withContext(Dispatchers.Main) {
-                    if (result is Success) {
-                        populateArticles(result.data)
-                        state = OperationState.succeeded
-                    } else {
-                        state = OperationState.failed
-                    }
+        viewModel.articles.observe(this) { articlesResult ->
+            when (articlesResult) {
+                is Success -> {
+                    populateArticles(articlesResult.data)
+                    state = OperationState.succeeded
+                }
+                is Failure -> {
+                    state = OperationState.failed
                 }
             }
         }

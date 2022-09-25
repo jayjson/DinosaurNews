@@ -1,4 +1,4 @@
-package com.jayjson.dinosaurnews.models
+package com.jayjson.dinosaurnews.model
 
 import com.jayjson.dinosaurnews.Source
 import java.io.Serializable

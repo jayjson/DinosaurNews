@@ -1,7 +1,6 @@
 package com.jayjson.dinosaurnews.networking
 
-import com.jayjson.dinosaurnews.models.response.GetTopHeadlinesResponse
-import retrofit2.Call
+import com.jayjson.dinosaurnews.model.response.GetTopHeadlinesResponse
 import retrofit2.http.*
 
 interface RemoteApiService {

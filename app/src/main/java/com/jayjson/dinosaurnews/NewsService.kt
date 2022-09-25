@@ -1,6 +1,6 @@
 package com.jayjson.dinosaurnews
 
-import com.jayjson.dinosaurnews.models.Article
+import com.jayjson.dinosaurnews.model.Article
 
 interface NewsService {
     fun getArticles(): List<Article>
