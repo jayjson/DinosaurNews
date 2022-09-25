@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import com.jayjson.dinosaurnews.model.Result
 import com.jayjson.dinosaurnews.networking.NetworkStatusChecker
+import kotlinx.coroutines.withContext
 
 @RequiresApi(Build.VERSION_CODES.M)
 class ArticlesListViewModel(private val remoteApi: RemoteApi, private val networkChecker: NetworkStatusChecker): ViewModel() {
@@ -31,7 +32,9 @@ class ArticlesListViewModel(private val remoteApi: RemoteApi, private val networ
         networkChecker.performIfConnectedToInternet {
             viewModelScope.launch(Dispatchers.IO) {
                 Log.i(TAG, "Fetching articles from API...")
-                _articles.postValue(remoteApi.getTopHeadlines(Country.US))
+                withContext(Dispatchers.Main) {
+                    _articles.postValue(remoteApi.getTopHeadlines(Country.US))
+                }
             }
         }
     }
