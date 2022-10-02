@@ -3,7 +3,7 @@ package com.jayjson.dinosaurnews
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.jayjson.dinosaurnews.models.Article
+import com.jayjson.dinosaurnews.model.Article
 
 class ArticleListAdapter(var articles: List<Article>, val clickListener: ArticleClickListener) : RecyclerView.Adapter<ArticleListViewHolder>() {
 
