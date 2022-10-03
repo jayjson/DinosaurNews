@@ -7,11 +7,15 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.work.*
 import com.google.android.material.snackbar.Snackbar
 import com.jayjson.dinosaurnews.databinding.ActivityArticleDetailBinding
 import com.jayjson.dinosaurnews.model.Article
+import com.jayjson.dinosaurnews.model.Failure
+import com.jayjson.dinosaurnews.model.OperationState
+import com.jayjson.dinosaurnews.model.Success
 import com.jayjson.dinosaurnews.worker.DownloadImageWorker
 import com.jayjson.dinosaurnews.worker.FileClearWorker
 import kotlinx.coroutines.Dispatchers
@@ -88,10 +92,16 @@ class ArticleDetailActivity : AppCompatActivity() {
 
         workManager.getWorkInfoByIdLiveData(downloadRequest.id).observe(this, Observer { info ->
             if (info.state.isFinished) {
-                val imagePath = info.outputData.getString("image_path")
-
-                if (!imagePath.isNullOrEmpty()) {
-                    displayImage(imagePath)
+                if (info.state == WorkInfo.State.SUCCEEDED) {
+                    val imagePath = info.outputData.getString("image_path")
+                    if (!imagePath.isNullOrEmpty()) {
+                        displayImage(imagePath)
+                    }
+                } else {
+                    val message = "Failed to fetch images!"
+                    val duration = Toast.LENGTH_SHORT
+                    val toast = Toast.makeText(applicationContext, message, duration)
+                    toast.show()
                 }
             }
         })
