@@ -18,6 +18,7 @@ import com.jayjson.dinosaurnews.model.OperationState
 import com.jayjson.dinosaurnews.model.Success
 import com.jayjson.dinosaurnews.worker.DownloadImageWorker
 import com.jayjson.dinosaurnews.worker.FileClearWorker
+import com.jayjson.dinosaurnews.worker.SepiaFilterWorker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -85,12 +86,17 @@ class ArticleDetailActivity : AppCompatActivity() {
             ))
             .build()
 
+        val sepiaFilterWorker = OneTimeWorkRequestBuilder<SepiaFilterWorker>()
+            .setConstraints(constraints)
+            .build()
+
         val workManager = WorkManager.getInstance(this)
         workManager.beginWith(clearFilesWorker)
             .then(downloadRequest)
+            .then(sepiaFilterWorker)
             .enqueue()
 
-        workManager.getWorkInfoByIdLiveData(downloadRequest.id).observe(this, Observer { info ->
+        workManager.getWorkInfoByIdLiveData(sepiaFilterWorker.id).observe(this, Observer { info ->
             if (info.state.isFinished) {
                 if (info.state == WorkInfo.State.SUCCEEDED) {
                     val imagePath = info.outputData.getString("image_path")
