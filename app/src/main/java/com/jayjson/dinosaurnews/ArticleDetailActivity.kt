@@ -69,7 +69,7 @@ class ArticleDetailActivity : AppCompatActivity() {
     private fun downloadImage(imageUrlString: String) {
         val constraintsForNetworking = Constraints.Builder()
             .setRequiresBatteryNotLow(true)
-//            .setRequiresStorageNotLow(true)
+            .setRequiresStorageNotLow(true)
             .setRequiredNetworkType(NetworkType.NOT_ROAMING)
             .build()
 
