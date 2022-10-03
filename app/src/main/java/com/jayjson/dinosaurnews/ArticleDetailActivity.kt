@@ -13,12 +13,9 @@ import androidx.work.*
 import com.google.android.material.snackbar.Snackbar
 import com.jayjson.dinosaurnews.databinding.ActivityArticleDetailBinding
 import com.jayjson.dinosaurnews.model.Article
-import com.jayjson.dinosaurnews.model.Failure
-import com.jayjson.dinosaurnews.model.OperationState
-import com.jayjson.dinosaurnews.model.Success
+import com.jayjson.dinosaurnews.worker.BlackAndWhiteFilterWorker
 import com.jayjson.dinosaurnews.worker.DownloadImageWorker
 import com.jayjson.dinosaurnews.worker.FileClearWorker
-import com.jayjson.dinosaurnews.worker.SepiaFilterWorker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -70,7 +67,7 @@ class ArticleDetailActivity : AppCompatActivity() {
     }
 
     private fun downloadImage(imageUrlString: String) {
-        val constraints = Constraints.Builder()
+        val constraintsForNetworking = Constraints.Builder()
             .setRequiresBatteryNotLow(true)
 //            .setRequiresStorageNotLow(true)
             .setRequiredNetworkType(NetworkType.NOT_ROAMING)
@@ -80,23 +77,27 @@ class ArticleDetailActivity : AppCompatActivity() {
             .build()
 
         val downloadRequest = OneTimeWorkRequestBuilder<DownloadImageWorker>()
-            .setConstraints(constraints)
+            .setConstraints(constraintsForNetworking)
             .setInputData(workDataOf(
                 "IMAGE_URL" to imageUrlString
             ))
             .build()
 
-        val sepiaFilterWorker = OneTimeWorkRequestBuilder<SepiaFilterWorker>()
-            .setConstraints(constraints)
+        val constraintsForImageProcessing = Constraints.Builder()
+            .setRequiresBatteryNotLow(true)
+            .build()
+
+        val blackAndWhiteFilterWorker = OneTimeWorkRequestBuilder<BlackAndWhiteFilterWorker>()
+            .setConstraints(constraintsForImageProcessing)
             .build()
 
         val workManager = WorkManager.getInstance(this)
         workManager.beginWith(clearFilesWorker)
             .then(downloadRequest)
-            .then(sepiaFilterWorker)
+            .then(blackAndWhiteFilterWorker)
             .enqueue()
 
-        workManager.getWorkInfoByIdLiveData(sepiaFilterWorker.id).observe(this, Observer { info ->
+        workManager.getWorkInfoByIdLiveData(blackAndWhiteFilterWorker.id).observe(this, Observer { info ->
             if (info.state.isFinished) {
                 if (info.state == WorkInfo.State.SUCCEEDED) {
                     val imagePath = info.outputData.getString("image_path")

@@ -52,6 +52,53 @@ object ImageUtils {
   private const val SEPIA_TONE_GREEN = 65
   private const val SEPIA_TONE_BLUE = 20
 
+  fun applyBlackAndWhiteFilter(bitmap: Bitmap): Bitmap {
+    // image size
+    val width = bitmap.width
+    val height = bitmap.height
+
+    // create output bitmap
+    val outputBitmap = Bitmap.createBitmap(width, height, bitmap.config)
+
+    // color information
+    var alpha: Int
+    var red: Int
+    var green: Int
+    var blue: Int
+    var currentPixel: Int
+
+    // scan through all pixels
+    for (x in 0 until width) {
+      for (y in 0 until height) {
+
+        // get pixel color
+        currentPixel = bitmap.getPixel(x, y)
+
+        // get color on each channel
+        alpha = Color.alpha(currentPixel)
+        red = Color.red(currentPixel)
+        green = Color.green(currentPixel)
+        blue = Color.blue(currentPixel)
+
+        // apply grayscale sample
+        red = (GRAYSCALE_RED * red + GRAYSCALE_GREEN * green + GRAYSCALE_BLUE * blue).toInt()
+        green = red
+        blue = green
+
+        //if you overflow any color, set it to MAX (255)
+        red = min(red, MAX_COLOR)
+        green = min(green, MAX_COLOR)
+        blue = min(blue, MAX_COLOR)
+
+        outputBitmap.setPixel(x, y, Color.argb(alpha, red, green, blue))
+      }
+    }
+
+    bitmap.recycle()
+
+    return outputBitmap
+  }
+
   fun applySepiaFilter(bitmap: Bitmap): Bitmap {
     // image size
     val width = bitmap.width
