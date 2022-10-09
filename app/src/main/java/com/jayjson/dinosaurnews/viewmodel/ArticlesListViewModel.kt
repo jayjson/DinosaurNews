@@ -11,17 +11,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import com.jayjson.dinosaurnews.model.Result
 import com.jayjson.dinosaurnews.networking.NetworkStatusChecker
+import com.jayjson.dinosaurnews.repository.NewsRepository
 import kotlinx.coroutines.withContext
 
 @RequiresApi(Build.VERSION_CODES.M)
-class ArticlesListViewModel(private val remoteApi: RemoteApi, private val networkChecker: NetworkStatusChecker): ViewModel() {
+class ArticlesListViewModel(private val newsRepo: NewsRepository): ViewModel() {
 
     class Factory(
-        private val remoteApi: RemoteApi,
-        private val networkChecker: NetworkStatusChecker
+        private val newsRepo: NewsRepository
         ): ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return ArticlesListViewModel(remoteApi, networkChecker) as T
+            return ArticlesListViewModel(newsRepo) as T
         }
     }
 
@@ -29,12 +29,11 @@ class ArticlesListViewModel(private val remoteApi: RemoteApi, private val networ
     val articles: LiveData<Result<List<Article>>> = _articles
 
     init {
-        networkChecker.performIfConnectedToInternet {
-            viewModelScope.launch(Dispatchers.IO) {
-                Log.i(TAG, "Fetching articles from API...")
-                withContext(Dispatchers.Main) {
-                    _articles.postValue(remoteApi.getTopHeadlines())
-                }
+        viewModelScope.launch(Dispatchers.IO) {
+            Log.i(TAG, "Fetching articles from API...")
+            val fetchedArticles = newsRepo.getArticles()
+            withContext(Dispatchers.Main) {
+                _articles.postValue(fetchedArticles)
             }
         }
     }

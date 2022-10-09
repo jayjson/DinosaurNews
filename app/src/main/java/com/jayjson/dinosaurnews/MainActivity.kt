@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity(), ArticleListAdapter.ArticleClickListene
     private lateinit var binding: ActivityMainBinding
 
     private val viewModel: ArticlesListViewModel by viewModels {
-        ArticlesListViewModel.Factory(remoteApi = App.remoteApi, networkChecker = networkStatusChecker)
+        ArticlesListViewModel.Factory(newsRepo = App.repository)
     }
 
     private val networkStatusChecker by lazy {
