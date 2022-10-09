@@ -2,6 +2,7 @@ package com.jayjson.dinosaurnews
 
 import android.app.Application
 import android.content.Context
+import com.jayjson.dinosaurnews.database.NewsDatabase
 import com.jayjson.dinosaurnews.networking.RemoteApi
 import com.jayjson.dinosaurnews.networking.buildApiService
 
@@ -12,6 +13,10 @@ class App : Application() {
 
     companion object {
         private lateinit var instance: App
+
+        private val database: NewsDatabase by lazy {
+            NewsDatabase.buildDatabase(instance)
+        }
 
         private val preferences by lazy {
             instance.getSharedPreferences(KEY_PREFERENCES, Context.MODE_PRIVATE)
