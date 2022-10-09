@@ -25,18 +25,7 @@ class ArticlesListViewModel(private val newsRepo: NewsRepository): ViewModel() {
         }
     }
 
-    private val _articles = MutableLiveData<Result<List<Article>>>()
-    val articles: LiveData<Result<List<Article>>> = _articles
-
-    init {
-        viewModelScope.launch(Dispatchers.IO) {
-            Log.i(TAG, "Fetching articles from API...")
-            val fetchedArticles = newsRepo.getArticles()
-            withContext(Dispatchers.Main) {
-                _articles.postValue(fetchedArticles)
-            }
-        }
-    }
+    val articles: LiveData<Result<List<Article>>> = newsRepo.getArticles().asLiveData()
 
     companion object {
         private const val TAG = "ArticlesListViewModel"

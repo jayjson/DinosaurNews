@@ -7,54 +7,60 @@ import com.jayjson.dinosaurnews.model.*
 import com.jayjson.dinosaurnews.networking.RemoteApi
 import com.jayjson.dinosaurnews.model.Success
 import com.jayjson.dinosaurnews.model.Failure
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flow
 
 class NewsRepositoryImp(
     private val articleDao: ArticleDao,
     private val sourceDao: SourceDao,
     private val remoteApi: RemoteApi
 ) : NewsRepository {
-    override suspend fun getArticles(): Result<List<Article>> {
-        val articlesFromLocalDb = articleDao.getArticles()
-        Log.i(TAG, "articlesFromLocalDb size = ${articlesFromLocalDb.size}")
+    override fun getArticles(): Flow<Result<List<Article>>> {
+        return flow {
+            val articlesFromLocalDb = articleDao.getArticles()
+            Log.i(TAG, "articlesFromLocalDb size = ${articlesFromLocalDb.size}")
 
-        try {
-            val articlesFromNetworkResult = remoteApi.getTopHeadlines()
-            when (articlesFromNetworkResult) {
-                is Success -> {
-                    val fetchedArticles = articlesFromNetworkResult.data
-                    articleDao.clearArticles()
-                    articleDao.addArticles(fetchedArticles)
+            emit(Success(articlesFromLocalDb))
 
-                    val fetchedSources = fetchedArticles.map { it.source }.distinct()
-                    sourceDao.addSources(fetchedSources)
+            try {
+                val articlesFromNetworkResult = remoteApi.getTopHeadlines()
+                when (articlesFromNetworkResult) {
+                    is Success -> {
+                        val fetchedArticles = articlesFromNetworkResult.data
+                        articleDao.clearArticles()
+//                        articleDao.addArticles(fetchedArticles)
 
-                    return Success(fetchedArticles)
+//                        val fetchedSources = fetchedArticles.map { it.source }.distinct()
+//                        sourceDao.addSources(fetchedSources)
+
+                        emit(Success(fetchedArticles))
+                    }
+                    is Failure -> {
+                        Log.e(TAG, "Fetching articles failed")
+                        emit(Success(articlesFromLocalDb))
+                    }
                 }
-                is Failure -> {
-                    Log.e(TAG, "Fetching articles failed")
-                    return Success(articlesFromLocalDb)
-                }
+            } catch (error: Exception) {
+                Log.e(TAG, error.toString())
+                emit(Failure(error))
             }
-        } catch (e: Exception) {
-            Log.e(TAG, e.toString())
-            return Success(articlesFromLocalDb)
         }
     }
 
-    override suspend fun addArticles(articles: List<Article>) {
+    override fun addArticles(articles: List<Article>) {
         articleDao.addArticles(articles)
     }
 
-    override suspend fun clearArticles() {
+    override fun clearArticles() {
         articleDao.clearArticles()
     }
 
-    override suspend fun getSources(): List<Source> {
+    override fun getSources(): List<Source> {
         return sourceDao.getSources()
     }
 
-    override suspend fun addSources(sources: List<Source>) {
+    override fun addSources(sources: List<Source>) {
         sourceDao.addSources(sources)
     }
 

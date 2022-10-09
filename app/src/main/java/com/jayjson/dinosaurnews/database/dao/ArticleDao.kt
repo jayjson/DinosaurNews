@@ -9,11 +9,11 @@ import com.jayjson.dinosaurnews.model.Article
 @Dao
 interface ArticleDao {
     @Query("SELECT * FROM articles")
-    suspend fun getArticles(): List<Article>
+    fun getArticles(): List<Article>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addArticles(articles: List<Article>)
+    fun addArticles(articles: List<Article>)
 
     @Query("DELETE FROM articles")
-    suspend fun clearArticles()
+    fun clearArticles()
 }

@@ -9,8 +9,8 @@ import com.jayjson.dinosaurnews.model.Source
 @Dao
 interface SourceDao {
     @Query("SELECT * FROM sources")
-    suspend fun getSources(): List<Source>
+    fun getSources(): List<Source>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addSources(sources: List<Source>)
+    fun addSources(sources: List<Source>)
 }
