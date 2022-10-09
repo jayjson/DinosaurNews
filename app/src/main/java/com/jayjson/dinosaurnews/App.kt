@@ -21,7 +21,7 @@ class App : Application() {
             NewsDatabase.buildDatabase(instance)
         }
 
-        private val repository: NewsRepository by lazy {
+        val repository: NewsRepository by lazy {
             NewsRepositoryImp(
                 database.articleDao(),
                 database.sourceDao(),

@@ -7,6 +7,7 @@ import com.jayjson.dinosaurnews.model.*
 import com.jayjson.dinosaurnews.networking.RemoteApi
 import com.jayjson.dinosaurnews.model.Success
 import com.jayjson.dinosaurnews.model.Failure
+import kotlinx.coroutines.Dispatchers
 
 class NewsRepositoryImp(
     private val articleDao: ArticleDao,
