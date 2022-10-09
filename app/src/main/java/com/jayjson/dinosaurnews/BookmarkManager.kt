@@ -3,7 +3,7 @@ package com.jayjson.dinosaurnews
 import android.content.Context
 import androidx.preference.PreferenceManager
 import com.google.gson.GsonBuilder
-import com.jayjson.dinosaurnews.models.Article
+import com.jayjson.dinosaurnews.model.Article
 
 class BookmarkManager(private val context: Context) {
     fun save(article: Article) {
