@@ -21,7 +21,13 @@ class NewsRepositoryImp(
             val articlesFromNetworkResult = remoteApi.getTopHeadlines()
             when (articlesFromNetworkResult) {
                 is Success -> {
-                    articleDao.addArticles(articlesFromNetworkResult.data)
+                    val fetchedArticles = articlesFromNetworkResult.data
+                    articleDao.clearArticles()
+                    articleDao.addArticles(fetchedArticles)
+
+                    val fetchedSources = fetchedArticles.map { it.source }.distinct()
+                    sourceDao.addSources(fetchedSources)
+
                     return articlesFromNetworkResult.data
                 }
                 is Failure -> {
@@ -36,19 +42,19 @@ class NewsRepositoryImp(
     }
 
     override suspend fun addArticles(articles: List<Article>) {
-        TODO("Not yet implemented")
+        articleDao.addArticles(articles)
     }
 
     override suspend fun clearArticles() {
-        TODO("Not yet implemented")
+        articleDao.clearArticles()
     }
 
     override suspend fun getSources(): List<Source> {
-        TODO("Not yet implemented")
+        return sourceDao.getSources()
     }
 
-    override suspend fun addSources(articles: List<Source>) {
-        TODO("Not yet implemented")
+    override suspend fun addSources(sources: List<Source>) {
+        sourceDao.addSources(sources)
     }
 
     companion object {

@@ -12,5 +12,5 @@ interface SourceDao {
     suspend fun getSources(): List<Source>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addSources(articles: List<Source>)
+    suspend fun addSources(sources: List<Source>)
 }
