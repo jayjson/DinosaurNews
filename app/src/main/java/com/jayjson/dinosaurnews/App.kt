@@ -3,6 +3,7 @@ package com.jayjson.dinosaurnews
 import android.app.Application
 import android.content.Context
 import com.jayjson.dinosaurnews.database.NewsDatabase
+import com.jayjson.dinosaurnews.model.Country
 import com.jayjson.dinosaurnews.networking.RemoteApi
 import com.jayjson.dinosaurnews.networking.buildApiService
 import com.jayjson.dinosaurnews.repository.NewsRepository
@@ -43,6 +44,8 @@ class App : Application() {
         private val apiService by lazy { buildApiService() }
 
         val remoteApi by lazy { RemoteApi(apiService) }
+
+        val defaultCountry = Country.US
     }
 
     override fun onCreate() {

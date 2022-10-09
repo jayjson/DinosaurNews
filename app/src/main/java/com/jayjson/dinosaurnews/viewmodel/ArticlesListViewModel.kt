@@ -33,7 +33,7 @@ class ArticlesListViewModel(private val remoteApi: RemoteApi, private val networ
             viewModelScope.launch(Dispatchers.IO) {
                 Log.i(TAG, "Fetching articles from API...")
                 withContext(Dispatchers.Main) {
-                    _articles.postValue(remoteApi.getTopHeadlines(Country.US))
+                    _articles.postValue(remoteApi.getTopHeadlines())
                 }
             }
         }
