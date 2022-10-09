@@ -5,6 +5,8 @@ import android.content.Context
 import com.jayjson.dinosaurnews.database.NewsDatabase
 import com.jayjson.dinosaurnews.networking.RemoteApi
 import com.jayjson.dinosaurnews.networking.buildApiService
+import com.jayjson.dinosaurnews.repository.NewsRepository
+import com.jayjson.dinosaurnews.repository.NewsRepositoryImp
 
 private const val KEY_PREFERENCES = "dinosaur_news_preferences"
 private const val KEY_TOKEN = "token"
@@ -16,6 +18,14 @@ class App : Application() {
 
         private val database: NewsDatabase by lazy {
             NewsDatabase.buildDatabase(instance)
+        }
+
+        private val repository: NewsRepository by lazy {
+            NewsRepositoryImp(
+                database.articleDao(),
+                database.sourceDao(),
+                remoteApi
+            )
         }
 
         private val preferences by lazy {
