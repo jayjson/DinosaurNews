@@ -14,7 +14,7 @@ class NewsRepositoryImp(
     private val sourceDao: SourceDao,
     private val remoteApi: RemoteApi
 ) : NewsRepository {
-    override suspend fun getArticles(): List<Article> {
+    override suspend fun getArticles(): Result<List<Article>> {
         val articlesFromLocalDb = articleDao.getArticles()
         Log.i(TAG, "articlesFromLocalDb size = ${articlesFromLocalDb.size}")
 
@@ -29,16 +29,16 @@ class NewsRepositoryImp(
                     val fetchedSources = fetchedArticles.map { it.source }.distinct()
                     sourceDao.addSources(fetchedSources)
 
-                    return articlesFromNetworkResult.data
+                    return Success(fetchedArticles)
                 }
                 is Failure -> {
                     Log.e(TAG, "Fetching articles failed")
-                    return articlesFromLocalDb
+                    return Success(articlesFromLocalDb)
                 }
             }
         } catch (e: Exception) {
             Log.e(TAG, e.toString())
-            return articlesFromLocalDb
+            return Success(articlesFromLocalDb)
         }
     }
 
