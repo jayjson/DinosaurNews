@@ -5,8 +5,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.jayjson.dinosaurnews.model.Source
+import com.jayjson.dinosaurnews.database.dao.ArticleDao
+import com.jayjson.dinosaurnews.database.dao.SourceDao
 import com.jayjson.dinosaurnews.model.Article
+import com.jayjson.dinosaurnews.model.Source
 import com.jayjson.dinosaurnews.model.typeConverter.SourceTypeConverter
 
 const val DATABASE_VERSION = 1
@@ -31,4 +33,8 @@ abstract class NewsDatabase: RoomDatabase() {
                 .build()
         }
     }
+
+    abstract fun articleDao(): ArticleDao
+
+    abstract fun sourceDao(): SourceDao
 }
