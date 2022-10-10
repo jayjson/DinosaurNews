@@ -15,6 +15,7 @@ import com.jayjson.dinosaurnews.networking.NetworkStatusChecker
 import com.jayjson.dinosaurnews.repository.NewsRepository
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.withContext
 
 @RequiresApi(Build.VERSION_CODES.M)
