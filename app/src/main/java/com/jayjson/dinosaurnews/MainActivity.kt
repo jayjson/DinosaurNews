@@ -14,20 +14,15 @@ import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
+import android.widget.SearchView
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.jayjson.dinosaurnews.model.Country
 import com.jayjson.dinosaurnews.model.OperationState
-import com.jayjson.dinosaurnews.model.Result
 import com.jayjson.dinosaurnews.model.Success
 import com.jayjson.dinosaurnews.model.Failure
 import com.jayjson.dinosaurnews.networking.NetworkStatusChecker
 import com.jayjson.dinosaurnews.viewmodel.ArticlesListViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @RequiresApi(Build.VERSION_CODES.M)
 class MainActivity : AppCompatActivity(), ArticleListAdapter.ArticleClickListener {
@@ -61,7 +56,7 @@ class MainActivity : AppCompatActivity(), ArticleListAdapter.ArticleClickListene
         super.onCreate(savedInstanceState)
         setupBinding()
         setupSubviews()
-        fetchTopHeadlines()
+        setupObservers()
     }
 
     private fun setupBinding() {
@@ -78,11 +73,11 @@ class MainActivity : AppCompatActivity(), ArticleListAdapter.ArticleClickListene
         swipeContainer = binding.swipeContainer
 
         tryAgainButton.setOnClickListener {
-            fetchTopHeadlines()
+            setupObservers()
         }
 
         swipeContainer.setOnRefreshListener {
-            fetchTopHeadlines()
+            setupObservers()
             swipeContainer.isRefreshing = false
         }
     }
@@ -97,7 +92,7 @@ class MainActivity : AppCompatActivity(), ArticleListAdapter.ArticleClickListene
         startActivity(articleDetail)
     }
 
-    private fun fetchTopHeadlines() {
+    private fun setupObservers() {
         viewModel.articles.observe(this) { articlesResult ->
             when (articlesResult) {
                 is Success -> {
@@ -109,6 +104,22 @@ class MainActivity : AppCompatActivity(), ArticleListAdapter.ArticleClickListene
                 }
             }
         }
+
+        val queryTextListener = object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                // do nothing, search is done on text changes
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                newText?.let { searchQuery ->
+                    viewModel.searchPlanets(searchQuery)
+                }
+                return true
+            }
+        }
+
+        binding.searchView.setOnQueryTextListener(queryTextListener)
     }
 
     private fun resetUI(newState: OperationState) {
