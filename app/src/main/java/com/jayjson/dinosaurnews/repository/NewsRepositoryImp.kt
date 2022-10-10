@@ -56,6 +56,10 @@ class NewsRepositoryImp(
         articleDao.clearArticles()
     }
 
+    override fun searchArticles(search: String): List<Article> {
+        articleDao.searchArticles(search)
+    }
+
     override fun getSources(): List<Source> {
         return sourceDao.getSources()
     }

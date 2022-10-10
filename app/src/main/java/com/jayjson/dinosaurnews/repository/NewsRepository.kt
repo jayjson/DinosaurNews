@@ -9,6 +9,7 @@ interface NewsRepository {
     fun getArticles(): Flow<Result<List<Article>>>
     fun addArticles(articles: List<Article>)
     fun clearArticles()
+    fun searchArticles(search: String): List<Article>
     fun getSources(): List<Source>
     fun addSources(sources: List<Source>)
 }
