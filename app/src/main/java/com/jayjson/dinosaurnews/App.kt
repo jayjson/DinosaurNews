@@ -6,11 +6,15 @@ import com.jayjson.dinosaurnews.database.NewsDatabase
 import com.jayjson.dinosaurnews.model.Country
 import com.jayjson.dinosaurnews.networking.RemoteApi
 import com.jayjson.dinosaurnews.networking.buildApiService
+import com.jayjson.dinosaurnews.prefsstore.PrefsStore
+import com.jayjson.dinosaurnews.prefsstore.PrefsStoreImp
 import com.jayjson.dinosaurnews.repository.NewsRepository
 import com.jayjson.dinosaurnews.repository.NewsRepositoryImp
 
 private const val KEY_PREFERENCES = "dinosaur_news_preferences"
 private const val KEY_TOKEN = "token"
+
+const val PREFS_NAME = "dinosaur_news_preferences"
 
 class App : Application() {
 
@@ -31,6 +35,10 @@ class App : Application() {
 
         private val preferences by lazy {
             instance.getSharedPreferences(KEY_PREFERENCES, Context.MODE_PRIVATE)
+        }
+
+        val prefsStore: PrefsStore by lazy {
+            PrefsStoreImp(instance)
         }
 
         fun saveToken(token: String) {

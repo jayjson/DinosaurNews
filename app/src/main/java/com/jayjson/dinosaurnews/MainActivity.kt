@@ -11,17 +11,16 @@ import com.jayjson.dinosaurnews.model.Article
 import android.net.ConnectivityManager
 import android.os.Build
 import android.view.View
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.SearchView
+import android.widget.*
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.jayjson.dinosaurnews.model.OperationState
 import com.jayjson.dinosaurnews.model.Success
 import com.jayjson.dinosaurnews.model.Failure
 import com.jayjson.dinosaurnews.networking.NetworkStatusChecker
+import com.jayjson.dinosaurnews.prefsstore.PrefsStoreImp
 import com.jayjson.dinosaurnews.viewmodel.ArticlesListViewModel
 
 @RequiresApi(Build.VERSION_CODES.M)
@@ -32,16 +31,22 @@ class MainActivity : AppCompatActivity(), ArticleListAdapter.ArticleClickListene
             resetUI(newValue)
         }
 
+    private var wifiOnlyOn = false
+
     private lateinit var binding: ActivityMainBinding
 
     private val viewModel: ArticlesListViewModel by viewModels {
-        ArticlesListViewModel.Factory(newsRepo = App.repository)
+        ArticlesListViewModel.Factory(
+            newsRepo = App.repository,
+            prefsStore = App.prefsStore
+        )
     }
 
     private val networkStatusChecker by lazy {
         NetworkStatusChecker(getSystemService(ConnectivityManager::class.java))
     }
 
+    private lateinit var wifiOnlyCheckbox: CheckBox
     private lateinit var articleListRecyclerView: RecyclerView
     private lateinit var loadingIndicator: ProgressBar
     private lateinit var errorStateView: LinearLayout
@@ -66,11 +71,16 @@ class MainActivity : AppCompatActivity(), ArticleListAdapter.ArticleClickListene
 
     private fun setupSubviews() {
         title = "Top Headlines"
+        wifiOnlyCheckbox = binding.checkBoxWifiOnly
         articleListRecyclerView = binding.articleListRecyclerview
         loadingIndicator = binding.progressIndicator
         errorStateView = binding.linearLayoutErrorState
         tryAgainButton = binding.buttonErrorState
         swipeContainer = binding.swipeContainer
+
+        wifiOnlyCheckbox.setOnClickListener {
+            viewModel.toggleWiFiOnly()
+        }
 
         tryAgainButton.setOnClickListener {
             setupObservers()
@@ -80,6 +90,22 @@ class MainActivity : AppCompatActivity(), ArticleListAdapter.ArticleClickListene
             setupObservers()
             swipeContainer.isRefreshing = false
         }
+
+        val queryTextListener = object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                // do nothing, search is done on text changes
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                newText?.let { searchQuery ->
+                    viewModel.searchPlanets(searchQuery)
+                }
+                return true
+            }
+        }
+
+        binding.searchView.setOnQueryTextListener(queryTextListener)
     }
 
     override fun articleClicked(article: Article) {
@@ -105,21 +131,10 @@ class MainActivity : AppCompatActivity(), ArticleListAdapter.ArticleClickListene
             }
         }
 
-        val queryTextListener = object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                // do nothing, search is done on text changes
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                newText?.let { searchQuery ->
-                    viewModel.searchPlanets(searchQuery)
-                }
-                return true
-            }
+        viewModel.isWifiOnlyOn.observe(this) { wifiOnlyOn ->
+            this.wifiOnlyOn = wifiOnlyOn
+            println("wifiOnlyOn value = ${wifiOnlyOn}")
         }
-
-        binding.searchView.setOnQueryTextListener(queryTextListener)
     }
 
     private fun resetUI(newState: OperationState) {

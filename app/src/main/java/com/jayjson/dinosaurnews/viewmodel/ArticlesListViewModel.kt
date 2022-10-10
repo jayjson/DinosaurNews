@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import com.jayjson.dinosaurnews.model.Result
 import com.jayjson.dinosaurnews.model.Success
 import com.jayjson.dinosaurnews.networking.NetworkStatusChecker
+import com.jayjson.dinosaurnews.prefsstore.PrefsStore
 import com.jayjson.dinosaurnews.repository.NewsRepository
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.onEach
@@ -19,17 +20,23 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.withContext
 
 @RequiresApi(Build.VERSION_CODES.M)
-class ArticlesListViewModel(private val newsRepo: NewsRepository): ViewModel() {
+class ArticlesListViewModel(
+    private val newsRepo: NewsRepository,
+    private val prefsStore: PrefsStore
+): ViewModel() {
 
     class Factory(
-        private val newsRepo: NewsRepository
+        private val newsRepo: NewsRepository,
+        private val prefsStore: PrefsStore
         ): ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return ArticlesListViewModel(newsRepo) as T
+            return ArticlesListViewModel(newsRepo, prefsStore) as T
         }
     }
     private val _articles = MutableLiveData<Result<List<Article>>>()
     val articles: LiveData<Result<List<Article>>> = _articles
+
+    val isWifiOnlyOn = prefsStore.shouldUseWiFiOnly().asLiveData()
 
     init {
         viewModelScope.launch(IO) {
@@ -46,6 +53,12 @@ class ArticlesListViewModel(private val newsRepo: NewsRepository): ViewModel() {
         viewModelScope.launch(IO) {
             val filteredArticles = newsRepo.searchArticles("%$search%")
             _articles.postValue(Success(filteredArticles))
+        }
+    }
+
+    fun toggleWiFiOnly() {
+        viewModelScope.launch {
+            prefsStore.toggleUseWiFiOnly()
         }
     }
 
