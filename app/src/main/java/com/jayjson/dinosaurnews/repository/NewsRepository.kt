@@ -6,7 +6,7 @@ import com.jayjson.dinosaurnews.model.Source
 import kotlinx.coroutines.flow.Flow
 
 interface NewsRepository {
-    fun getArticles(): Flow<Result<List<Article>>>
+    fun getArticles(shouldFetchFromNetwork: Boolean): Flow<Result<List<Article>>>
     fun addArticles(articles: List<Article>)
     fun clearArticles()
     fun searchArticles(search: String): List<Article>

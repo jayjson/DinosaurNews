@@ -31,14 +31,13 @@ class MainActivity : AppCompatActivity(), ArticleListAdapter.ArticleClickListene
             resetUI(newValue)
         }
 
-    private var wifiOnlyOn = false
-
     private lateinit var binding: ActivityMainBinding
 
     private val viewModel: ArticlesListViewModel by viewModels {
         ArticlesListViewModel.Factory(
             newsRepo = App.repository,
-            prefsStore = App.prefsStore
+            prefsStore = App.prefsStore,
+            networkStatusChecker = networkStatusChecker
         )
     }
 
@@ -132,8 +131,7 @@ class MainActivity : AppCompatActivity(), ArticleListAdapter.ArticleClickListene
         }
 
         viewModel.isWifiOnlyOn.observe(this) { wifiOnlyOn ->
-            this.wifiOnlyOn = wifiOnlyOn
-            println("wifiOnlyOn value = ${wifiOnlyOn}")
+            viewModel.currentWifiOnlyValue = wifiOnlyOn
         }
     }
 

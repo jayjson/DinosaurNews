@@ -25,4 +25,21 @@ class NetworkStatusChecker(private val connectivityManager: ConnectivityManager?
                 || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
                 || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)
     }
+
+    inline fun performIfConnectedToWiFi(wifiOnlyOn: Boolean, action: () -> Unit) {
+        if (wifiOnlyOn) {
+            if (hasWifiConnection()) {
+                action()
+            }
+        } else {
+            action()
+        }
+    }
+
+    fun hasWifiConnection(): Boolean {
+        val network = connectivityManager?.activeNetwork ?: return false
+        val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+
+        return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+    }
 }
