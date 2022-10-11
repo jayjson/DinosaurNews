@@ -36,13 +36,14 @@ class NewsRepositoryImp(
                     when (articlesFromNetworkResult) {
                         is Success -> {
                             val fetchedArticles = articlesFromNetworkResult.data
-                            articleDao.clearArticles()
-                            articleDao.addArticles(fetchedArticles)
-
-//                        val fetchedSources = fetchedArticles.map { it.source }.distinct()
-//                        sourceDao.addSources(fetchedSources)
-
                             emit(Success(fetchedArticles))
+
+                            if (fetchedArticles.isNotEmpty()) {
+                                articleDao.clearArticles()
+                                val fetchedSources = fetchedArticles.map { it.source }
+                                sourceDao.addSources(fetchedSources)
+                                articleDao.addArticles(fetchedArticles)
+                            }
                         }
                         is Failure -> {
                             Log.e(TAG, "Fetching articles failed")
