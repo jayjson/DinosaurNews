@@ -24,8 +24,7 @@ class NewsRepositoryImp(
     @RequiresApi(Build.VERSION_CODES.M)
     override fun getArticles(): Flow<Result<List<Article>>> {
         return flow {
-//            val articlesFromLocalDb = articleDao.getArticles()
-            val articlesFromLocalDb = listOf<Article>()
+            val articlesFromLocalDb = articleDao.getArticles()
             Log.i(TAG, "articlesFromLocalDb size = ${articlesFromLocalDb.size}")
 
             emit(Success(articlesFromLocalDb))
@@ -38,7 +37,7 @@ class NewsRepositoryImp(
                         is Success -> {
                             val fetchedArticles = articlesFromNetworkResult.data
                             articleDao.clearArticles()
-//                        articleDao.addArticles(fetchedArticles)
+                            articleDao.addArticles(fetchedArticles)
 
 //                        val fetchedSources = fetchedArticles.map { it.source }.distinct()
 //                        sourceDao.addSources(fetchedSources)
