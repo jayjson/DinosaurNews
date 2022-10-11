@@ -1,26 +1,21 @@
 package com.jayjson.dinosaurnews
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.jayjson.dinosaurnews.databinding.ActivityMainBinding
-import com.jayjson.dinosaurnews.model.Article
-
-import android.net.ConnectivityManager
 import android.os.Build
+import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.jayjson.dinosaurnews.databinding.ActivityMainBinding
+import com.jayjson.dinosaurnews.model.Article
+import com.jayjson.dinosaurnews.model.Failure
 import com.jayjson.dinosaurnews.model.OperationState
 import com.jayjson.dinosaurnews.model.Success
-import com.jayjson.dinosaurnews.model.Failure
-import com.jayjson.dinosaurnews.networking.NetworkStatusChecker
-import com.jayjson.dinosaurnews.prefsstore.PrefsStoreImp
 import com.jayjson.dinosaurnews.viewmodel.ArticlesListViewModel
 
 @RequiresApi(Build.VERSION_CODES.M)

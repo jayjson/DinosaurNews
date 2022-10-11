@@ -1,23 +1,17 @@
 package com.jayjson.dinosaurnews.viewmodel
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.*
 import com.jayjson.dinosaurnews.model.Article
-import com.jayjson.dinosaurnews.model.Country
-import com.jayjson.dinosaurnews.networking.RemoteApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import com.jayjson.dinosaurnews.model.Result
 import com.jayjson.dinosaurnews.model.Success
-import com.jayjson.dinosaurnews.networking.NetworkStatusChecker
 import com.jayjson.dinosaurnews.prefsstore.PrefsStore
 import com.jayjson.dinosaurnews.repository.NewsRepository
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.M)
 class ArticlesListViewModel(

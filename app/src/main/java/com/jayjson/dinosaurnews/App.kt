@@ -3,7 +3,6 @@ package com.jayjson.dinosaurnews
 import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
-import androidx.core.content.ContextCompat.getSystemService
 import com.jayjson.dinosaurnews.database.NewsDatabase
 import com.jayjson.dinosaurnews.model.Country
 import com.jayjson.dinosaurnews.networking.NetworkStatusChecker

@@ -7,13 +7,10 @@ import androidx.lifecycle.asLiveData
 import com.jayjson.dinosaurnews.database.dao.ArticleDao
 import com.jayjson.dinosaurnews.database.dao.SourceDao
 import com.jayjson.dinosaurnews.model.*
-import com.jayjson.dinosaurnews.networking.RemoteApi
-import com.jayjson.dinosaurnews.model.Success
-import com.jayjson.dinosaurnews.model.Failure
 import com.jayjson.dinosaurnews.networking.NetworkStatusChecker
+import com.jayjson.dinosaurnews.networking.RemoteApi
 import com.jayjson.dinosaurnews.prefsstore.PrefsStore
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 
 class NewsRepositoryImp(
