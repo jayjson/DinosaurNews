@@ -2,8 +2,11 @@ package com.jayjson.dinosaurnews
 
 import android.app.Application
 import android.content.Context
+import android.net.ConnectivityManager
+import androidx.core.content.ContextCompat.getSystemService
 import com.jayjson.dinosaurnews.database.NewsDatabase
 import com.jayjson.dinosaurnews.model.Country
+import com.jayjson.dinosaurnews.networking.NetworkStatusChecker
 import com.jayjson.dinosaurnews.networking.RemoteApi
 import com.jayjson.dinosaurnews.networking.buildApiService
 import com.jayjson.dinosaurnews.prefsstore.PrefsStore
@@ -29,7 +32,9 @@ class App : Application() {
             NewsRepositoryImp(
                 database.articleDao(),
                 database.sourceDao(),
-                remoteApi
+                remoteApi,
+                networkStatusChecker,
+                prefsStore
             )
         }
 
@@ -39,6 +44,10 @@ class App : Application() {
 
         val prefsStore: PrefsStore by lazy {
             PrefsStoreImp(instance)
+        }
+
+        private val networkStatusChecker by lazy {
+            NetworkStatusChecker(instance.getSystemService(ConnectivityManager::class.java))
         }
 
         fun saveToken(token: String) {

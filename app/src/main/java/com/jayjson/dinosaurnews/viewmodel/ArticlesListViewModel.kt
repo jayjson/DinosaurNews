@@ -22,30 +22,24 @@ import kotlinx.coroutines.withContext
 @RequiresApi(Build.VERSION_CODES.M)
 class ArticlesListViewModel(
     private val newsRepo: NewsRepository,
-    private val prefsStore: PrefsStore,
-    private val networkStatusChecker: NetworkStatusChecker
+    private val prefsStore: PrefsStore
 ): ViewModel() {
 
     class Factory(
         private val newsRepo: NewsRepository,
-        private val prefsStore: PrefsStore,
-        private val networkStatusChecker: NetworkStatusChecker
+        private val prefsStore: PrefsStore
         ): ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return ArticlesListViewModel(newsRepo, prefsStore, networkStatusChecker) as T
+            return ArticlesListViewModel(newsRepo, prefsStore) as T
         }
     }
     private val _articles = MutableLiveData<Result<List<Article>>>()
     val articles: LiveData<Result<List<Article>>> = _articles
 
-    val isWifiOnlyOn = prefsStore.shouldUseWiFiOnly().asLiveData()
-    var currentWifiOnlyValue = false
-
     init {
-        val shouldFetchFromNetwork = if (currentWifiOnlyValue) networkStatusChecker.hasWifiConnection() else true
         viewModelScope.launch(IO) {
             newsRepo
-                .getArticles(shouldFetchFromNetwork)
+                .getArticles()
                 .onEach { newArticles ->
                     _articles.postValue(newArticles)
                 }

@@ -36,13 +36,8 @@ class MainActivity : AppCompatActivity(), ArticleListAdapter.ArticleClickListene
     private val viewModel: ArticlesListViewModel by viewModels {
         ArticlesListViewModel.Factory(
             newsRepo = App.repository,
-            prefsStore = App.prefsStore,
-            networkStatusChecker = networkStatusChecker
+            prefsStore = App.prefsStore
         )
-    }
-
-    private val networkStatusChecker by lazy {
-        NetworkStatusChecker(getSystemService(ConnectivityManager::class.java))
     }
 
     private lateinit var wifiOnlyCheckbox: CheckBox
@@ -128,10 +123,6 @@ class MainActivity : AppCompatActivity(), ArticleListAdapter.ArticleClickListene
                     state = OperationState.failed
                 }
             }
-        }
-
-        viewModel.isWifiOnlyOn.observe(this) { wifiOnlyOn ->
-            viewModel.currentWifiOnlyValue = wifiOnlyOn
         }
     }
 
