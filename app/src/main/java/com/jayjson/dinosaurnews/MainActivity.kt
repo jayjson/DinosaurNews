@@ -1,33 +1,22 @@
 package com.jayjson.dinosaurnews
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.jayjson.dinosaurnews.databinding.ActivityMainBinding
-import com.jayjson.dinosaurnews.model.Article
-
-import android.net.ConnectivityManager
 import android.os.Build
+import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.ProgressBar
+import android.widget.*
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.jayjson.dinosaurnews.model.Country
-import com.jayjson.dinosaurnews.model.OperationState
-import com.jayjson.dinosaurnews.model.Result
-import com.jayjson.dinosaurnews.model.Success
+import com.jayjson.dinosaurnews.databinding.ActivityMainBinding
+import com.jayjson.dinosaurnews.model.Article
 import com.jayjson.dinosaurnews.model.Failure
-import com.jayjson.dinosaurnews.networking.NetworkStatusChecker
+import com.jayjson.dinosaurnews.model.OperationState
+import com.jayjson.dinosaurnews.model.Success
 import com.jayjson.dinosaurnews.viewmodel.ArticlesListViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @RequiresApi(Build.VERSION_CODES.M)
 class MainActivity : AppCompatActivity(), ArticleListAdapter.ArticleClickListener {
@@ -40,13 +29,13 @@ class MainActivity : AppCompatActivity(), ArticleListAdapter.ArticleClickListene
     private lateinit var binding: ActivityMainBinding
 
     private val viewModel: ArticlesListViewModel by viewModels {
-        ArticlesListViewModel.Factory(remoteApi = App.remoteApi, networkChecker = networkStatusChecker)
+        ArticlesListViewModel.Factory(
+            newsRepo = App.repository,
+            prefsStore = App.prefsStore
+        )
     }
 
-    private val networkStatusChecker by lazy {
-        NetworkStatusChecker(getSystemService(ConnectivityManager::class.java))
-    }
-
+    private lateinit var wifiOnlyCheckbox: CheckBox
     private lateinit var articleListRecyclerView: RecyclerView
     private lateinit var loadingIndicator: ProgressBar
     private lateinit var errorStateView: LinearLayout
@@ -61,7 +50,7 @@ class MainActivity : AppCompatActivity(), ArticleListAdapter.ArticleClickListene
         super.onCreate(savedInstanceState)
         setupBinding()
         setupSubviews()
-        fetchTopHeadlines()
+        setupObservers()
     }
 
     private fun setupBinding() {
@@ -71,20 +60,41 @@ class MainActivity : AppCompatActivity(), ArticleListAdapter.ArticleClickListene
 
     private fun setupSubviews() {
         title = "Top Headlines"
+        wifiOnlyCheckbox = binding.checkBoxWifiOnly
         articleListRecyclerView = binding.articleListRecyclerview
         loadingIndicator = binding.progressIndicator
         errorStateView = binding.linearLayoutErrorState
         tryAgainButton = binding.buttonErrorState
         swipeContainer = binding.swipeContainer
 
+        wifiOnlyCheckbox.setOnClickListener {
+            viewModel.toggleWiFiOnly()
+        }
+
         tryAgainButton.setOnClickListener {
-            fetchTopHeadlines()
+            setupObservers()
         }
 
         swipeContainer.setOnRefreshListener {
-            fetchTopHeadlines()
+            setupObservers()
             swipeContainer.isRefreshing = false
         }
+
+        val queryTextListener = object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                // do nothing, search is done on text changes
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                newText?.let { searchQuery ->
+                    viewModel.searchPlanets(searchQuery)
+                }
+                return true
+            }
+        }
+
+        binding.searchView.setOnQueryTextListener(queryTextListener)
     }
 
     override fun articleClicked(article: Article) {
@@ -97,7 +107,7 @@ class MainActivity : AppCompatActivity(), ArticleListAdapter.ArticleClickListene
         startActivity(articleDetail)
     }
 
-    private fun fetchTopHeadlines() {
+    private fun setupObservers() {
         viewModel.articles.observe(this) { articlesResult ->
             when (articlesResult) {
                 is Success -> {
