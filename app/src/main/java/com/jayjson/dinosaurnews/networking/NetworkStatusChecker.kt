@@ -3,6 +3,7 @@ package com.jayjson.dinosaurnews.networking
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 
 /**
@@ -14,6 +15,8 @@ class NetworkStatusChecker(private val connectivityManager: ConnectivityManager?
     inline fun performIfConnectedToInternet(action: () -> Unit) {
         if (hasInternetConnection()) {
             action()
+        } else {
+            Log.i(TAG, "Not executing input action due to having no internet connection")
         }
     }
 
@@ -30,6 +33,8 @@ class NetworkStatusChecker(private val connectivityManager: ConnectivityManager?
         if (wifiOnlyOn) {
             if (hasWifiConnection()) {
                 action()
+            } else {
+                Log.i(TAG, "Not executing input action due to having no WiFi connection")
             }
         } else {
             action()
@@ -41,5 +46,9 @@ class NetworkStatusChecker(private val connectivityManager: ConnectivityManager?
         val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
 
         return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+    }
+
+    companion object {
+        const val TAG = "NetworkStatusChecker"
     }
 }
