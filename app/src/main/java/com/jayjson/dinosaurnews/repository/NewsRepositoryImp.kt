@@ -31,7 +31,7 @@ class NewsRepositoryImp(
 
             try {
                 val isWiFiOnlyApplicable = prefsStore.shouldUseWiFiOnly().asLiveData().value
-                if ((isWiFiOnlyApplicable != true) || (isWiFiOnlyApplicable == true && networkStatusChecker.hasWifiConnection())) {
+                if (isWiFiOnlyApplicable != true || networkStatusChecker.hasWifiConnection()) {
                     val articlesFromNetworkResult = remoteApi.getTopHeadlines()
                     when (articlesFromNetworkResult) {
                         is Success -> {
