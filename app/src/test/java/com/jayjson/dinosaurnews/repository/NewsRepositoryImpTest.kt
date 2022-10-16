@@ -13,9 +13,6 @@ import com.jayjson.dinosaurnews.networking.RemoteApi
 import com.jayjson.dinosaurnews.prefsstore.PrefsStore
 import io.mockk.*
 import junit.framework.Assert.assertEquals
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
