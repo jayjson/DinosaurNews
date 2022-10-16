@@ -69,21 +69,31 @@ internal class NewsRepositoryImpTest {
         val collectJob = launch(UnconfinedTestDispatcher()) {
             repo.getArticles().toList(results)
         }
-        
+
         // then
         assertEquals(Success(fakeList), results[0])
 
         collectJob.cancel()
     }
 
-//    private val articleDao: ArticleDao,
-//    private val sourceDao: SourceDao,
-//    private val remoteApi: RemoteApi,
-//    private val networkStatusChecker: NetworkStatusChecker,
-//    private val prefsStore: PrefsStore
-
     @Test
     fun testAddArticles() {
+        // given
+        val fakeArticleDao = spyk<ArticleDao>()
+        val fakeList = listOf(fakeArticle)
+        val repo = NewsRepositoryImp(
+            articleDao = fakeArticleDao,
+            sourceDao = mockk<SourceDao>(),
+            remoteApi = mockk<RemoteApi>(),
+            networkStatusChecker = mockk<NetworkStatusChecker>(),
+            prefsStore = mockk<PrefsStore>()
+        )
+
+        // when
+        repo.addArticles(fakeList)
+
+        // then
+        verify { fakeArticleDao.addArticles(any()) }
     }
 
     @Test
