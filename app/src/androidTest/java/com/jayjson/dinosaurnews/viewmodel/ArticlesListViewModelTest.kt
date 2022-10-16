@@ -1,4 +1,4 @@
-package com.jayjson.dinosaurnews
+package com.jayjson.dinosaurnews.viewmodel
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.jayjson.dinosaurnews.model.Article
@@ -6,10 +6,9 @@ import com.jayjson.dinosaurnews.model.Source
 import com.jayjson.dinosaurnews.model.Success
 import com.jayjson.dinosaurnews.prefsstore.PrefsStoreImp
 import com.jayjson.dinosaurnews.repository.NewsRepositoryImp
-import com.jayjson.dinosaurnews.viewmodel.ArticlesListViewModel
 import io.mockk.every
 import io.mockk.mockk
-import junit.framework.Assert.assertEquals
+import junit.framework.Assert
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.runBlocking
@@ -49,7 +48,7 @@ class ArticlesListViewModelTest {
         delay(100) // To make sure that the flow emit occurs before checking
 
         // then
-        assertEquals(fakeResult, viewModel.articles.value)
+        Assert.assertEquals(fakeResult, viewModel.articles.value)
     }
 
     @Test
@@ -60,7 +59,7 @@ class ArticlesListViewModelTest {
         val fakeResult = Success(listOf(fakeArticle))
         every { repo.getArticles() } returns flow {
             emit(fakeResult)
-        }        
+        }
         every { repo.searchArticles(any()) } returns fakeList
         val prefsStore = mockk<PrefsStoreImp>()
 
@@ -70,6 +69,6 @@ class ArticlesListViewModelTest {
         delay(100) // To make sure that the flow emit occurs before checking
 
         // then
-        assertEquals(Success(fakeList), viewModel.articles.value)
+        Assert.assertEquals(Success(fakeList), viewModel.articles.value)
     }
 }
