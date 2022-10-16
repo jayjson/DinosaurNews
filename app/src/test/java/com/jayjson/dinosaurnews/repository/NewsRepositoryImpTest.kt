@@ -98,17 +98,78 @@ internal class NewsRepositoryImpTest {
 
     @Test
     fun testClearArticles() {
+        // given
+        val fakeArticleDao = spyk<ArticleDao>()
+        val repo = NewsRepositoryImp(
+            articleDao = fakeArticleDao,
+            sourceDao = mockk<SourceDao>(),
+            remoteApi = mockk<RemoteApi>(),
+            networkStatusChecker = mockk<NetworkStatusChecker>(),
+            prefsStore = mockk<PrefsStore>()
+        )
+
+        // when
+        repo.clearArticles()
+
+        // then
+        verify { fakeArticleDao.clearArticles() }
     }
 
     @Test
     fun testSearchArticles() {
+        // given
+        val fakeArticleDao = spyk<ArticleDao>()
+        val repo = NewsRepositoryImp(
+            articleDao = fakeArticleDao,
+            sourceDao = mockk<SourceDao>(),
+            remoteApi = mockk<RemoteApi>(),
+            networkStatusChecker = mockk<NetworkStatusChecker>(),
+            prefsStore = mockk<PrefsStore>()
+        )
+
+        // when
+        repo.searchArticles("hello")
+
+        // then
+        verify { fakeArticleDao.searchArticles(any()) }
     }
 
     @Test
     fun testGetSources() {
+        // given
+        val fakeSourceDao = spyk<SourceDao>()
+        val repo = NewsRepositoryImp(
+            articleDao = mockk<ArticleDao>(),
+            sourceDao = fakeSourceDao,
+            remoteApi = mockk<RemoteApi>(),
+            networkStatusChecker = mockk<NetworkStatusChecker>(),
+            prefsStore = mockk<PrefsStore>()
+        )
+
+        // when
+        repo.getSources()
+
+        // then
+        verify { fakeSourceDao.getSources() }
     }
 
     @Test
     fun testAddSources() {
+        // given
+        val fakeSourceDao = spyk<SourceDao>()
+        val fakeSourceList = listOf(fakeSource)
+        val repo = NewsRepositoryImp(
+            articleDao = mockk<ArticleDao>(),
+            sourceDao = fakeSourceDao,
+            remoteApi = mockk<RemoteApi>(),
+            networkStatusChecker = mockk<NetworkStatusChecker>(),
+            prefsStore = mockk<PrefsStore>()
+        )
+
+        // when
+        repo.addSources(fakeSourceList)
+
+        // then
+        verify { fakeSourceDao.addSources(any()) }
     }
 }
