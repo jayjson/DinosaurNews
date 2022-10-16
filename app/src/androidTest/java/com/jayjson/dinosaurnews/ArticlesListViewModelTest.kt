@@ -36,16 +36,40 @@ class ArticlesListViewModelTest {
 
     @Test
     fun testGettingAndEmittingArticles() = runBlocking {
+        // given
         val repo = mockk<NewsRepositoryImp>()
         val fakeResult = Success(listOf(fakeArticle))
-        val prefsStore = mockk<PrefsStoreImp>()
-
         every { repo.getArticles() } returns flow {
             emit(fakeResult)
         }
+        val prefsStore = mockk<PrefsStoreImp>()
 
+        // when
         val viewModel = ArticlesListViewModel(repo, prefsStore)
         delay(100) // To make sure that the flow emit occurs before checking
+
+        // then
         assertEquals(fakeResult, viewModel.articles.value)
+    }
+
+    @Test
+    fun testSearchArticles() = runBlocking {
+        // given
+        val repo = mockk<NewsRepositoryImp>()
+        val fakeList = listOf(fakeArticle)
+        val fakeResult = Success(listOf(fakeArticle))
+        every { repo.getArticles() } returns flow {
+            emit(fakeResult)
+        }        
+        every { repo.searchArticles(any()) } returns fakeList
+        val prefsStore = mockk<PrefsStoreImp>()
+
+        // when
+        val viewModel = ArticlesListViewModel(repo, prefsStore)
+        viewModel.searchArticles("")
+        delay(100) // To make sure that the flow emit occurs before checking
+
+        // then
+        assertEquals(Success(fakeList), viewModel.articles.value)
     }
 }
