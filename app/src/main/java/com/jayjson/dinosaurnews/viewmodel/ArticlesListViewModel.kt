@@ -41,7 +41,7 @@ class ArticlesListViewModel(
         }
     }
 
-    fun searchPlanets(search: String) {
+    fun searchArticles(search: String) {
         viewModelScope.launch(IO) {
             val filteredArticles = newsRepo.searchArticles("%$search%")
             _articles.postValue(Success(filteredArticles))

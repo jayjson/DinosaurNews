@@ -1,12 +1,14 @@
 package com.jayjson.dinosaurnews.prefsstore
 
 import android.content.Context
+import android.util.Log
 import androidx.datastore.preferences.SharedPreferencesMigration
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.preferencesKey
 import androidx.datastore.preferences.createDataStore
 import com.jayjson.dinosaurnews.PREFS_NAME
+import com.jayjson.dinosaurnews.repository.NewsRepositoryImp
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -27,6 +29,7 @@ class PrefsStoreImp @Inject constructor(
         if (exception is IOException) {
             emit(emptyPreferences())
         } else {
+            Log.e(TAG, exception.toString())
             throw exception
         }
     }.map { it[PreferenceKeys.USE_WIFI_ONLY] ?: false }
@@ -39,5 +42,9 @@ class PrefsStoreImp @Inject constructor(
 
     private object PreferenceKeys {
         val USE_WIFI_ONLY = preferencesKey<Boolean>("wifi_check_enabled")
+    }
+
+    companion object {
+        private const val TAG = "PrefsStoreImp"
     }
 }

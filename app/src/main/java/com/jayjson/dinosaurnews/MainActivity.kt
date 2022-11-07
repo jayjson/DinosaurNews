@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity(), ArticleListAdapter.ArticleClickListene
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 newText?.let { searchQuery ->
-                    viewModel.searchPlanets(searchQuery)
+                    viewModel.searchArticles(searchQuery)
                 }
                 return true
             }

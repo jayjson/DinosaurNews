@@ -25,7 +25,7 @@ class NewsRepositoryImp(
     override fun getArticles(): Flow<Result<List<Article>>> {
         return flow {
             val articlesFromLocalDb = articleDao.getArticles()
-            Log.i(TAG, "articlesFromLocalDb size = ${articlesFromLocalDb.size}")
+            Log.d(TAG, "articlesFromLocalDb size = ${articlesFromLocalDb.size}")
 
             emit(Success(articlesFromLocalDb))
 
